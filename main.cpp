@@ -11,7 +11,6 @@
 #include "bulletCapsuleShape.h"
 #include "bulletConeShape.h"
 #include "bulletGhostNode.h"
-#include "BulletCollision/CollisionDispatch/btCollisionDispatcher.h"
 #include "cardMaker.h"
 #include "texture.h"
 #include "texturePool.h"
@@ -444,7 +443,7 @@ void initFrontWall(BulletWorld *physics_world, WindowFramework *window)
 
   PT(TextureStage) ts = new TextureStage("ts");
   ts->set_mode(TextureStage::M_modulate);
-  PT(Texture) tex = TexturePool::get_global_ptr()->load_texture("../SVDRV_as04/texture/ .jpg");
+  PT(Texture) tex = TexturePool::get_global_ptr()->load_texture("../SVDRV_as04/texture/wall.jpg");
 
   //np_ground_tex.set_p(90);
   np_ground_tex.set_tex_scale(ts, 1, 1);
