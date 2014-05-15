@@ -223,9 +223,16 @@ void keyHandler(const Event *eventPtr, void *dataPtr)
 
 //debugModeHandler: activate and deactivate bullet physics debug mode by pressing f1/f2/f3/f4
 //shows force, normals, collision cube, etc
+struct two_parameter
+{
+    void *param1;
+    void *param2;
+};
 void debugModeHandler(const Event *eventPtr, void *dataPtr)
 {
-    BulletDebugNode *debugNode = (BulletDebugNode *)dataPtr;
+    struct two_parameter *parameters = (struct two_parameter *)dataPtr;
+    NodePath *debugNodePath = (NodePath *)parameters->param1;
+    BulletDebugNode *debugNode = (BulletDebugNode *)parameters->param2;
     static bool show_bounding_boxes_value = false;
     static bool show_constraints_value = false;
     static bool show_normals_value = false;
@@ -250,6 +257,11 @@ void debugModeHandler(const Event *eventPtr, void *dataPtr)
         show_wireframe_value = !show_wireframe_value;
         debugNode->show_wireframe(show_wireframe_value);
     }
+    if(show_bounding_boxes_value||show_constraints_value||show_normals_value||show_wireframe_value)
+    {
+        debugNodePath->show();
+    }
+    else debugNodePath->hide();
 }
 
 //initBall: init a single ball
@@ -721,7 +733,7 @@ int main(int argc, char *argv[])
     bullet_dbg_node->show_normals(false);
     bullet_dbg_node->show_wireframe(false);
     NodePath np_dbg_node = window->get_render().attach_new_node(bullet_dbg_node);
-    np_dbg_node.show();
+    //np_dbg_node.show();
     physics_world->set_debug_node(bullet_dbg_node);
     //end debug node
 
@@ -793,10 +805,13 @@ int main(int argc, char *argv[])
     framework.define_key("arrow_right", "callKeyHandler", &keyHandler, (void *) &camera);
 
     //debugger keys
-    framework.define_key("f1", "callChangeDebugMode", &debugModeHandler, (void *) bullet_dbg_node);
-    framework.define_key("f2", "callChangeDebugMode", &debugModeHandler, (void *) bullet_dbg_node);
-    framework.define_key("f3", "callChangeDebugMode", &debugModeHandler, (void *) bullet_dbg_node);
-    framework.define_key("f4", "callChangeDebugMode", &debugModeHandler, (void *) bullet_dbg_node);
+    struct two_parameter parameters;
+    parameters.param1 = (void *)&np_dbg_node;
+    parameters.param2 = (void *)bullet_dbg_node;
+    framework.define_key("f1", "callChangeDebugMode", &debugModeHandler, (void *) &parameters);
+    framework.define_key("f2", "callChangeDebugMode", &debugModeHandler, (void *) &parameters);
+    framework.define_key("f3", "callChangeDebugMode", &debugModeHandler, (void *) &parameters);
+    framework.define_key("f4", "callChangeDebugMode", &debugModeHandler, (void *) &parameters);
 
     //change infoText handler
     framework.define_key("l", "callInfoTextHandler", &infoTextHandler, (void *) infoText);
