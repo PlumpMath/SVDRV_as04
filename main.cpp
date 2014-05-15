@@ -344,13 +344,14 @@ void initGhostPlane(BulletWorld *physics_world, WindowFramework *window)
   //physics_world->attach_rigid_body(floor_rigid_node);
   //NodePath ghostNode = window->get_render().attach_new_node(floor_rigid_node);
 
-  PT(BulletPlaneShape) planeShape = new BulletPlaneShape(LVecBase3(0.0,0.0,1.0),0.0);
+  //PT(BulletPlaneShape) planeShape = new BulletPlaneShape(LVecBase3(0.0,0.0,1.0),0.0);
+  PT(BulletBoxShape) planeShape = new BulletBoxShape(LVecBase3(20.0, 20.0, 0.5));
   PT(BulletGhostNode) ghostPlane = new BulletGhostNode("ghostPlane");
   ghostPlane->add_shape(planeShape);
   physics_world->attach_ghost(ghostPlane);
 
   NodePath ghostNode = window->get_render().attach_new_node(ghostPlane);
-  ghostNode.set_pos(0, 0, 0.9);
+  ghostNode.set_pos(0, 0, 0.4);
 
   // show a trasparent plane
   //LPlane *p = new LPlane(LVector3(0, 0, 1), LPoint3(0, 0, 0));
